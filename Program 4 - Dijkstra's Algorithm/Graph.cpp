@@ -22,13 +22,13 @@ Graph::~Graph () {
         vertices.clear(); //clears all vertices in graph structure
 }//end deconstructor
 
-void Graph::addVertex(std::string label){
-    vertices.insert(vertices.end(), Vertex(label)); //inserts the vertices, by creating the Vertex from the string label 
+void Graph::addVertex(std::string point){
+    vertices.insert(vertices.end(), Vertex(point)); //inserts the vertices, by creating the Vertex from the string label 
 }//end addVertex
 
-void Graph::removeVertex(std::string label){    //deleted vertex
+void Graph::removeVertex(std::string point){    //deleted vertex
     for(int i = 0; i < vertices.size(); i++){   //for loop across vertices with index conditional based on vertices size
-        if(vertices[i].getLabel() == label){    //gets label of the vertices if equal label string
+        if(vertices[i].getPoint() == point){    //gets label of the vertices if equal label string
             vertices.erase(vertices.begin()+i); //... and erase the vertices (from beginning vertex + index number)
         }
     }
@@ -36,32 +36,32 @@ void Graph::removeVertex(std::string label){    //deleted vertex
     
     for(std::vector<Vertex>::iterator it = std::begin(vertices); it != std::end(vertices); ++it){ // delete all edges connected to deleted vertex
         for(auto edges : it->getEdgeMap()){                                                       //iterator over edge map to erase
-            if(edges.first == label){                                                             //... connected labels to the vertex
-                it->edgeMap.erase(label);
+            if(edges.first == point){                                                             //... connected labels to the vertex
+                it->edgeMap.erase(point);
             }
         }
     }
 }//end removeVertex
 
-void Graph::addEdge(std::string label1, std::string label2, unsigned long weight){                  
+void Graph::addEdge(std::string point_a, std::string point_b, unsigned long weight){                  
     for(std::vector<Vertex>::iterator it = std::begin(vertices); it != std::end(vertices); ++it){   //for loop to iterate across beginning vertex vector to the end
-        if(it->getLabel() == label1){                                                               //get label is == label1 string and inserts edge to edgeMap by iterator pointer
-            it->insertEdgeMap(label2, weight);
+        if(it->getPoint() == point_a){                                                               //get label is == point_a string and inserts edge to edgeMap by iterator pointer
+            it->insertEdgeMap(point_b, weight);
         }
-        if(it->getLabel() == label2){                                                               //get label is == label2 string and inserts edge to edgeMap by iterator pointer
-            it->insertEdgeMap(label1, weight);
+        if(it->getPoint() == point_b){                                                               //get label is == point_b string and inserts edge to edgeMap by iterator pointer
+            it->insertEdgeMap(point_a, weight);
         }
     }
 }//end addEdge
 
-void Graph::removeEdge(std::string label1, std::string label2){                                     // delete all edges connected to deleted vertex
+void Graph::removeEdge(std::string point_a, std::string point_b){                                     // delete all edges connected to deleted vertex
     for(std::vector<Vertex>::iterator it = std::begin(vertices); it != std::end(vertices); ++it){   //for loop to iterate across beginning vertex vector to the end
         for(auto edges : it->getEdgeMap()){                                                         //auto loops through edgeMap from iterator pointer
-            if(edges.first == label2 && it->getLabel() == label1){                                  //get label is == label1 string and removes edge from edgeMap by iterator pointer
-                it->edgeMap.erase(label2);
+            if(edges.first == point_b && it->getPoint() == point_a){                                  //get label is == point_a string and removes edge from edgeMap by iterator pointer
+                it->edgeMap.erase(point_b);
             }
-            if(edges.first == label1 && it->getLabel() == label2){                                  //get label is == label2 string and removes edge from edgeMap by iterator pointer 
-                it->edgeMap.erase(label1);
+            if(edges.first == point_a && it->getPoint() == point_b){                                  //get label is == point_b string and removes edge from edgeMap by iterator pointer 
+                it->edgeMap.erase(point_a);
             }
         }
     }
@@ -70,35 +70,35 @@ void Graph::removeEdge(std::string label1, std::string label2){                 
 void Graph::printGraph(){
     for(std::vector<Vertex>::iterator it = std::begin(vertices); it != std::end(vertices); ++it){       //prints method to format a structured graph output
         for(auto edge : it->getEdgeMap()){
-            std::cout << "(" << it->getLabel() << ", " << edge.first << ", " << edge.second << ") ";
+            std::cout << "(" << it->getPoint() << ", " << edge.first << ", " << edge.second << ") ";
         }
         std::cout << std::endl;
     }
 }//end printGraph
 
-std::vector<std::string> Graph::getPath(std::string endLabel, std::map<std::string, std::string> pathMap, std::vector<std::string> path){
-    if(endLabel == ""){                                     //if the endLabel string isnt empty, return vector path
+std::vector<std::string> Graph::getPath(std::string endpath, std::map<std::string, std::string> pathMap, std::vector<std::string> path){
+    if(endpath == ""){                                     //if the endpath string isnt empty, return vector path
         return path;                                    
     }else{                                                  //else, then insert new path from beginning to end vertex label and return recursively until empty
-        path.insert(path.begin(), endLabel);
-        return getPath(pathMap[endLabel], pathMap, path);
+        path.insert(path.begin(), endpath);
+        return getPath(pathMap[endpath], pathMap, path);
     }
 }//end getPath
 
-unsigned long Graph::shortestPath(std::string startLabel, std::string endLabel, std::vector<std::string> &path){
+unsigned long Graph::shortestPath(std::string startpath, std::string endpath, std::vector<std::string> &path){
     std::map<std::string, unsigned long> dist;                                                           //initalize map variable for distance       
     std::map<std::string, std::string> prev;                                                             //initalize map variable for previous    
-    for(auto vertex : vertices){                                                                         //for loop auto over vertices to instert distance and prev to hold the main vertices and their labels    
-        dist.insert(std::pair<std::string, unsigned long>(vertex.getLabel(), INT_MAX));
-        prev.insert(std::pair<std::string, std::string>(vertex.getLabel(), ""));
+    for(auto v : vertices){                                                                         //for loop auto over vertices to instert distance and prev to hold the main vertices and their labels    
+        dist.insert(std::pair<std::string, unsigned long>(v.getPoint(), INT_MAX));
+        prev.insert(std::pair<std::string, std::string>(v.getPoint(), ""));
     }
-    dist[startLabel] = 0;                                                                                //start off at value 0 for distance travelled
+    dist[startpath] = 0;                                                                                //start off at value 0 for distance travelled
 
-    std::vector<std::string> S;                                                                         // vector variabl   e string S
+    std::vector<std::string> S;                                                                         //vector string S
     typedef std::pair<unsigned long, std::string> pi;                                                   //build priority queue to hold pair of vertex and adjacent path and vertices 
     std::priority_queue<pi, std::vector<pi>, std::greater<pi>> Q;                                       //... to push in an ordered path that directs to shortest path 
-    for(auto vertex : dist){
-        Q.push(std::make_pair(vertex.second, vertex.first));
+    for(auto d : dist){
+        Q.push(std::make_pair(d.second, d.first));
     }
 
     while(!Q.empty()){                                                                                  //Dijkstra's Algorithm while loop when the priority queue is not empty to store
@@ -107,13 +107,13 @@ unsigned long Graph::shortestPath(std::string startLabel, std::string endLabel, 
         Q.pop();
         S.push_back(U);
         for(std::vector<Vertex>::iterator it = std::begin(vertices); it != std::end(vertices); ++it){
-            if(it->getLabel() == U){                                                                    // locate the U vertex
+            if(it->getPoint() == U){                                                                    // locate the U vertex
                 for(auto edge : it->getEdgeMap()){                                                      // loop through every edge
                     if(dist[edge.first] > dist[U] + edge.second){
                         dist[edge.first] = dist[U] + edge.second;
                         Q = std::priority_queue<pi, std::vector<pi>, std::greater<pi>>();               // update the priorty queue
-                        for(auto vertex : dist){
-                            Q.push(std::make_pair(vertex.second, vertex.first));
+                        for(auto v : dist){
+                            Q.push(std::make_pair(v.second, v.first));
                         }
                         prev[edge.first] = U; // set parent of the edge in the parent map
                     }
@@ -122,6 +122,6 @@ unsigned long Graph::shortestPath(std::string startLabel, std::string endLabel, 
             }
         }
     }
-    path = getPath(endLabel, prev, path);   //initialize path veriable with the main shortest path
-    return dist[endLabel];
+    path = getPath(endpath, prev, path);   //initialize path veriable with the main shortest path
+    return dist[endpath];
 }//end shortestPath (Dijkstra's Algorithm)

@@ -6,11 +6,11 @@
 
 class GraphBase
 {
-  virtual void addVertex(std::string label) = 0;
-  virtual void removeVertex(std::string label) = 0;
-  virtual void addEdge(std::string label1, std::string label2, unsigned long weight) = 0;
-  virtual void removeEdge(std::string label1, std::string label2) = 0;
-  virtual unsigned long shortestPath(std::string startLabel, std::string endLabel, std::vector<std::string> &path) = 0;
+  virtual void addVertex(std::string point) = 0;
+  virtual void removeVertex(std::string point) = 0;
+  virtual void addEdge(std::string point_a, std::string point_b, unsigned long weight) = 0;
+  virtual void removeEdge(std::string point_a, std::string point_b) = 0;
+  virtual unsigned long shortestPath(std::string startpath, std::string endpath, std::vector<std::string> &path) = 0;
 };
 
 #endif
